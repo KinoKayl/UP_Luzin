@@ -32,13 +32,13 @@
 
 
                 <Label Content="Введите ФИО для поиска" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Margin="0 0 0 0" Grid.Row="0" Grid.Column="0"/>
-                <TextBox x:Name="FIOBox" Width="220" Height="25" ToolTip="Введите логин или почту!" HorizontalAlignment="Center" FontSize="14" Grid.Row="0" Grid.Column="1" VerticalContentAlignment="Center" TextChanged="FIOBox_TextChanged" MaxLength="50"/>
+                <TextBox x:Name="FIOBox" Text="" Width="220" Height="25" ToolTip="Введите логин или почту!" HorizontalAlignment="Center" FontSize="14" Grid.Row="0" Grid.Column="1" VerticalContentAlignment="Center" TextChanged="FIOBox_TextChanged" MaxLength="50"/>
                 <Label Content="Выберите сортировку" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" Margin="0 0 0 0" Grid.Row="1" Grid.Column="0"/>
                 <ComboBox x:Name="ComboBoxSort" Grid.Row="1" Grid.Column="1" Width="220" Height="25" FontSize="16" ToolTip="Выберите распределение!" SelectionChanged="ComboBoxSort_SelectionChanged">
                     <ComboBoxItem Content="По убыванию" Tag="0"/>
                     <ComboBoxItem Content="По возрастанию" IsSelected="True" Tag="1"/>
                 </ComboBox>
-                <CheckBox x:Name="UserCheckBox" Grid.Column="2" Grid.Row="0" Content="Только пользователи" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0" Checked="UserCheckBox_Checked" Unchecked="UserCheckBox_Unchecked"/>
+                <RadioButton x:Name="UserCheckBox" Grid.Column="2" Grid.Row="0" IsChecked="False" Content="Только пользователи" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,0,0,0" Checked="UserCheckBox_Checked" Unchecked="UserCheckBox_Unchecked"/>
                 <Button x:Name="ClearButton" Grid.Column="2" Grid.Row="1" Content="Очистить фильтр" Width="150" Height="25" HorizontalAlignment="Left" Margin="0,0,0,0" Click="ClearButton_Click" VerticalAlignment="Center"/>
 
             </Grid>

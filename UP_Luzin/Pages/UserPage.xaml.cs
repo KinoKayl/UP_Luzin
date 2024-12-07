@@ -25,59 +25,75 @@ namespace UP_Luzin.Pages
             InitializeComponent();
             var currentUsers = Entities.GetContext().User_.ToList();
             ListUser.ItemsSource = currentUsers;
+
             ComboBoxSort.SelectedIndex = 0;
             UserCheckBox.IsChecked = false;
-            UpdateUser();
+            
 
         }
 
-        public void UpdateUser()
+        public List<User_> UpdateUser()
         {
             var currentUsers = Entities.GetContext().User_.ToList();
-            ListUser.ItemsSource = currentUsers;
-
-            //Сортировка по введенному ФИО
-            currentUsers = currentUsers.Where(x => x.FIO.ToLower().Contains(FIOBox.Text.ToLower())).ToList();
             
-            //Сортировка по роли пользователь
+            //Сортировка по введенному ФИО
+            if (FIOBox.Text != "")
+            {
+                currentUsers = currentUsers.Where(x => x.FIO != null && x.FIO.ToLower().Contains(FIOBox.Text.ToLower())).ToList();
+
+            }
+            else
+            {
+                currentUsers = Entities.GetContext().User_.ToList();
+
+            }
+
+            /*Сортировка по роли пользователь
             if (UserCheckBox.IsChecked == true)
             {
                 currentUsers = currentUsers.Where(x => x.Role == 2).ToList();
             }
+            */
 
             //Сортировка в зависимости от выбора
             if (ComboBoxSort.SelectedIndex == 0)
             {
-                ListUser.ItemsSource = currentUsers.OrderBy(x => x.FIO).ToList();
+                currentUsers = currentUsers.OrderBy(x => x.FIO).ToList();
             }
             else
             {
-                ListUser.ItemsSource = currentUsers.OrderByDescending(x => x.FIO).ToList();
+                currentUsers = currentUsers.OrderByDescending(x => x.FIO).ToList();
             }
+
+            return currentUsers;
         }
         private void FIOBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            UpdateUser();
+            ListUser.ItemsSource = UpdateUser();
+            
         }
 
         private void ComboBoxSort_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            UpdateUser();
+            ListUser.ItemsSource = UpdateUser();
         }
 
         private void UserCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            UpdateUser();
+            ListUser.ItemsSource = UpdateUser();
         }
 
         private void UserCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            UpdateUser();
+            ListUser.ItemsSource = UpdateUser();
         }
 
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
-            UpdateUser();
+            FIOBox.Text = "";
+            ComboBoxSort.SelectedIndex = 0;
+            UserCheckBox.IsChecked = false;
+            ListUser.ItemsSource = UpdateUser();
         }
     }
 }
