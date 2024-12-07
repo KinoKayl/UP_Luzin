@@ -20,7 +20,7 @@
                 <DataGridTextColumn Header="Пароль" Width="*" Binding="{Binding Password}"/>
                 <DataGridTextColumn Header="Роль" Width="*" Binding="{Binding Role1.Title}"/>
                 <DataGridTextColumn Header="ФИО" Width="*" Binding="{Binding FIO}"/>
-                <DataGridTextColumn Header="Фото" Width="*"/>
+                <DataGridTextColumn Header="Фото" Width="*" Binding="{Binding PHOTO}"/>
 
                 <DataGridTemplateColumn Width="100">
                     <DataGridTemplateColumn.CellTemplate>

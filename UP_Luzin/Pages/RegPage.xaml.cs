@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -122,7 +123,9 @@ namespace UP_Luzin.Pages
             string passwordAccept = GetHash(PassswordBoxAccept.Password);
             string FIO = FIOBox.Text;
             int Role = (Roles.SelectedItem as ComboBoxItem)?.Tag as string == "1" ? 1 : 2;
-
+            string foto = BtnFoto.Content.ToString();
+            
+            //Проверки полей для регистрации
             try
             {
                 if (login.Length < 5)
@@ -173,7 +176,8 @@ namespace UP_Luzin.Pages
                     Login = login,
                     Password = password,
                     FIO = FIO,
-                    Role = Role
+                    Role = Role,
+                    Photo = foto
                 };
                 db.User_.Add(newUser);
                 db.SaveChanges();
@@ -218,12 +222,31 @@ namespace UP_Luzin.Pages
             return true;
         }
 
+        //Одностророннее хэширование
         public static string GetHash(string password)
         {
             using (var hash = SHA1.Create())
             {
                 return string.Concat(hash.ComputeHash(Encoding.UTF8.GetBytes(password)).Select(x => x.ToString("X2")));
             }
+        }
+
+        //Выбор изображения
+        private void BtnFoto_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Изображения (*.jpg;*.jpeg;*.png;*.bmp)|*.jpg;*.jpeg;*.png;*.bmp";
+            openFileDialog.Title = "Выберите изображение";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string filePath = openFileDialog.FileName;
+                BtnFoto.Content = filePath;
+                //BitmapImage bitmapImage = new BitmapImage(new Uri(filePath));
+                //Image.Source = bitmapImage; // Убедитесь, что у вас есть элемент Image с таким именем
+            }
+
+            PhotoBoxText.Visibility = Visibility.Collapsed;
         }
     }
 }

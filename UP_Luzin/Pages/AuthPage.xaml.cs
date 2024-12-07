@@ -110,7 +110,7 @@ namespace UP_Luzin.Pages
         {
             LoginBox.Text = string.Empty;
             PassswordBox.Password = string.Empty;
-            NavigationService?.Navigate(new AddUserPage(null));
+            NavigationService?.Navigate(new RegPage());
         }
 
         public static string GetHash(string password)

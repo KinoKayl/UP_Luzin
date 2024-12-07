@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -31,6 +32,9 @@ namespace UP_Luzin.Pages
         public bool isRedact = false;
 
         private User_ currentuser = new User_();
+
+        public string PhotoPath = null;
+
         public AddUserPage(User_ selecteduser)
         {
             InitializeComponent();
@@ -41,14 +45,17 @@ namespace UP_Luzin.Pages
                 currentuser = selecteduser;
                 isRedact = true;
                 AddButton.Content = "Изменить";
+                AddLabel.Content = "Редактирование пользователя";
             }
             else
             {
                 isRedact = false;
                 AddButton.Content = "Добавить";
+                AddLabel.Content = "Добавление пользователя";
             }
 
             DataContext = currentuser;
+            PhotoPath = null;
         }
 
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
@@ -136,7 +143,9 @@ namespace UP_Luzin.Pages
             string passwordAccept = GetHash(PassswordBoxAccept.Password);
             string FIO = FIOBox.Text;
             int Role = (Roles.SelectedItem as ComboBoxItem)?.Tag as string == "1" ? 1 : 2;
+            string foto = PhotoPath;
 
+            
             try
             {
                 if (login.Length < 5)
@@ -151,12 +160,17 @@ namespace UP_Luzin.Pages
                     return;
                 }
 
-                if (db.User_.Any(u => u.Login == login))
-                {
-                    MessageBox.Show("Пользователь с таким логином уже зарегистрирован в системе!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    LoginBox.Text = "";
-                    return;
+                if (isRedact != true) 
+                { 
+                    if (db.User_.Any(u => u.Login == login))
+                    {
+                        MessageBox.Show("Пользователь с таким логином уже зарегистрирован в системе!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        LoginBox.Text = "";
+                        return;
+                    }
+                        
                 }
+                
 
                 if (!PasswordRegex.IsMatch(password))
                 {
@@ -182,15 +196,29 @@ namespace UP_Luzin.Pages
                     return;
                 }
 
-                var newUser = new User_
+                var existingUser = db.User_.FirstOrDefault(u => u.Login == login);
+
+                if (existingUser != null)
                 {
-                    Login = login,
-                    Password = password,
-                    FIO = FIO,
-                    Role = Role
-                };
-                db.User_.Add(newUser);
-                db.SaveChanges();
+                    existingUser.Password = password;
+                    existingUser.FIO = FIO;
+                    existingUser.Role = Role;
+                    existingUser.Photo = foto;
+                    db.SaveChanges();
+                }
+                else
+                {
+                    var newUser = new User_
+                    {
+                        Login = login,
+                        Password = password,
+                        FIO = FIO,
+                        Role = Role,
+                        Photo = foto
+                    };
+                    db.User_.Add(newUser);
+                    db.SaveChanges();
+                }
 
                 switch (isRedact)
                 {
@@ -214,6 +242,23 @@ namespace UP_Luzin.Pages
                     }
                 }
             }
+        }
+        private void BtnFoto_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Изображения (*.jpg;*.jpeg;*.png;*.bmp)|*.jpg;*.jpeg;*.png;*.bmp";
+            openFileDialog.Title = "Выберите изображение";
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                string filePath = openFileDialog.FileName;
+                BtnFoto.Content = filePath;
+                PhotoPath = filePath;
+                //BitmapImage bitmapImage = new BitmapImage(new Uri(filePath));
+                //Image.Source = bitmapImage; // Убедитесь, что у вас есть элемент Image с таким именем
+            }
+
+            PhotoBoxText.Visibility = Visibility.Collapsed;
         }
 
         private bool IsValidLogin(string login)
