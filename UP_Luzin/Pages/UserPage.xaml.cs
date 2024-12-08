@@ -31,7 +31,7 @@ namespace UP_Luzin.Pages
             
 
         }
-
+        
         public List<User_> UpdateUser()
         {
             var currentUsers = Entities.GetContext().User_.ToList();
@@ -48,14 +48,15 @@ namespace UP_Luzin.Pages
 
             }
 
-            /*Сортировка по роли пользователь
+            //Сортировка по роли пользователь
             if (UserCheckBox.IsChecked == true)
             {
                 currentUsers = currentUsers.Where(x => x.Role == 2).ToList();
             }
-            */
+            
 
             //Сортировка в зависимости от выбора
+
             if (ComboBoxSort.SelectedIndex == 0)
             {
                 currentUsers = currentUsers.OrderBy(x => x.FIO).ToList();
@@ -69,23 +70,24 @@ namespace UP_Luzin.Pages
         }
         private void FIOBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            ListUser.ItemsSource = UpdateUser();
+            //ListUser.ItemsSource = UpdateUser();
             
         }
 
         private void ComboBoxSort_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            ListUser.ItemsSource = UpdateUser();
+            //UserCheckBox.IsChecked = true;
+            //ListUser.ItemsSource = UpdateUser();
         }
 
         private void UserCheckBox_Checked(object sender, RoutedEventArgs e)
         {
-            ListUser.ItemsSource = UpdateUser();
+           // ListUser.ItemsSource = UpdateUser();
         }
 
         private void UserCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
-            ListUser.ItemsSource = UpdateUser();
+            //ListUser.ItemsSource = UpdateUser();
         }
 
         private void ClearButton_Click(object sender, RoutedEventArgs e)
@@ -93,6 +95,12 @@ namespace UP_Luzin.Pages
             FIOBox.Text = "";
             ComboBoxSort.SelectedIndex = 0;
             UserCheckBox.IsChecked = false;
+            ListUser.ItemsSource = UpdateUser();
+        }
+
+        private void SortButton_Click(object sender, RoutedEventArgs e)
+        {
+            
             ListUser.ItemsSource = UpdateUser();
         }
     }
